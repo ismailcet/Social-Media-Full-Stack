@@ -2,6 +2,7 @@ package com.ismailcet.questapp.controllers;
 
 import com.ismailcet.questapp.entities.User;
 import com.ismailcet.questapp.repository.UserRepository;
+import com.ismailcet.questapp.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,47 +12,36 @@ import java.util.Optional;
 @RequestMapping("/v1/api/users")
 public class UserController {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
-    public UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping
     public List<User> getAllUser(){
-        return userRepository.findAll();
+        return userService.getAllUsers();
     }
 
     @PostMapping
     public User createUser(@RequestBody User user){
-        return userRepository.save(user);
+        return userService.createUser(user);
     }
 
     @GetMapping("/{userId}")
     public User getUserById(@PathVariable Long userId){
         //Custom exeception ekle
-        return userRepository.findById(userId).orElse(null);
+        return userService.getUserById(userId);
     }
 
     @PutMapping("/{userId}")
     public User updateUserById(@PathVariable Long userId,@RequestBody User newUser){
-        Optional<User> user = userRepository.findById(userId);
-        if(user.isPresent()){
-            User foundUser = user.get();
-            foundUser.setUserName(newUser.getUserName());
-            foundUser.setPassword(newUser.getPassword());
-            userRepository.save(foundUser);
-
-            return foundUser;
-        }else{
-            //custom exection
-            return null;
-        }
+       return userService.updateUser(userId,newUser);
     }
 
     @DeleteMapping("/{userId}")
     public void deleteUserById(@PathVariable Long userId){
-        userRepository.deleteById(userId);
+        userService.deleteById(userId);
     }
 
 
