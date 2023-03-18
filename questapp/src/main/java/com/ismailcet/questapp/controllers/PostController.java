@@ -1,6 +1,8 @@
 package com.ismailcet.questapp.controllers;
 
 import com.ismailcet.questapp.entities.Post;
+import com.ismailcet.questapp.request.PostCreateRequest;
+import com.ismailcet.questapp.request.UpdatePostRequest;
 import com.ismailcet.questapp.service.PostService;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +30,17 @@ public class PostController {
     }
 
     @PostMapping
-    public Post createOnePost(@RequestBody Post post){
-        return postService.createPost(post);
+    public Post createOnePost(@RequestBody PostCreateRequest postCreateRequest){
+        return postService.createPost(postCreateRequest);
+    }
+
+    @PutMapping("/{postId}")
+    public Post UpdatePostById(@PathVariable Long postId , @RequestBody UpdatePostRequest updatePostRequest){
+        return postService.updatePostById(postId , updatePostRequest);
+    }
+
+    @DeleteMapping("/{postId}")
+    public void DeletePostById(@PathVariable Long postId){
+         postService.deletePostById(postId);
     }
 }
